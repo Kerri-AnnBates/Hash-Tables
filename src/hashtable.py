@@ -7,88 +7,114 @@ class LinkedPair:
         self.value = value
         self.next = None
 
+
 class HashTable:
-    '''
-    A hash table that with `capacity` buckets
-    that accepts string keys
-    '''
+    """
+	A hash table that with `capacity` buckets
+	that accepts string keys
+	"""
+
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
 
-
     def _hash(self, key):
-        '''
-        Hash an arbitrary key and return an integer.
+        """
+		Hash an arbitrary key and return an integer.
 
-        You may replace the Python hash with DJB2 as a stretch goal.
-        '''
+		You may replace the Python hash with DJB2 as a stretch goal.
+		"""
         return hash(key)
 
-
     def _hash_djb2(self, key):
-        '''
-        Hash an arbitrary key using DJB2 hash
+        """
+		Hash an arbitrary key using DJB2 hash
 
-        OPTIONAL STRETCH: Research and implement DJB2
-        '''
+		OPTIONAL STRETCH: Research and implement DJB2
+		"""
         pass
-
 
     def _hash_mod(self, key):
-        '''
-        Take an arbitrary key and return a valid integer index
-        within the storage capacity of the hash table.
-        '''
+        """
+		Take an arbitrary key and return a valid integer index
+		within the storage capacity of the hash table.
+		"""
         return self._hash(key) % self.capacity
 
-
     def insert(self, key, value):
-        '''
-        Store the value with the given key.
+        """
+		Store the value with the given key.
 
-        # Part 1: Hash collisions should be handled with an error warning. (Think about and
-        # investigate the impact this will have on the tests)
+		# Part 1: Hash collisions should be handled with an error warning. (Think about and
+		# investigate the impact this will have on the tests)
 
-        # Part 2: Change this so that hash collisions are handled with Linked List Chaining.
+		# Part 2: Change this so that hash collisions are handled with Linked List Chaining.
 
-        Fill this in.
-        '''
-        pass
+		Fill this in.
+		"""
 
+        # Hash the key and set it to index
+        idx = self._hash_mod(key)
 
+        # Check if there is already a value at that index
+        if self.storage[idx]:
+            print("Error: There is a collision")  # Print warning if there is
+        else:
+            # Give that inex in storage a value
+            self.storage[idx] = value
 
     def remove(self, key):
-        '''
-        Remove the value stored with the given key.
+        """
+		Remove the value stored with the given key.
 
-        Print a warning if the key is not found.
+		Print a warning if the key is not found.
 
-        Fill this in.
-        '''
-        pass
+		Fill this in.
+		"""
 
+        # Hash the key
+        idx = self._hash_mod(key)
+
+        # If key is not found, print a warning
+        if self.storage[idx] == None:
+            print("Key not found")
+        else:
+            # Remove the value stored at that index
+            self.storage[idx] = None
+            return self.storage[idx]
 
     def retrieve(self, key):
-        '''
-        Retrieve the value stored with the given key.
+        """
+		Retrieve the value stored with the given key.
 
-        Returns None if the key is not found.
+		Returns None if the key is not found.
 
-        Fill this in.
-        '''
-        pass
+		Fill this in.
+		"""
 
+        idx = self._hash_mod(key)
+
+        # Check if value is stored at given key
+        if self.storage[idx] == None or idx >= self.capacity:
+            return None
+        else:
+            # Retrieve value and return it
+            return self.storage[idx]
 
     def resize(self):
-        '''
-        Doubles the capacity of the hash table and
-        rehash all key/value pairs.
+        """
+		Doubles the capacity of the hash table and
+		rehash all key/value pairs.
 
-        Fill this in.
-        '''
-        pass
+		Fill this in.
+		"""
+        # Double capacity
+        self.capacity *= 2
+        new_storage = [None] * self.capacity
 
+        # Rehash all key/value pairs
+
+        self.storage = new_storage
 
 
 if __name__ == "__main__":
