@@ -9,6 +9,9 @@ class LinkedPair:
         self.value = value
         self.next = None
 
+    def __repr__(self):
+        return f"<{self.key}, {self.value}>"
+
 
 class HashTable:
     """
@@ -53,16 +56,29 @@ class HashTable:
 
         # Hash the key and set it to index
         idx = self._hash_mod(key)
+        curr_pair = self.storage[idx]
 
         # Check if there is already a value at that index
-        if self.storage[idx]:
-            print("Error: There is a collision")  # Print warning if there is
-            # Start a linked list
-        else:
-            pair = LinkedPair(key, value)
+        if curr_pair is not None:
+            # print(f"Error: There is a collision at index: {idx}")
 
+            # Overwrite value if key matches
+            if curr_pair.key == key:
+                curr_pair.value = value
+            else:
+                # Loop until we found a key match or curr_pair -> None
+                while curr_pair is not None:
+                    if curr_pair.key == key:
+                        curr_pair.value = value
+                        break
+
+                    if curr_pair.next is None:
+                        curr_pair.next = LinkedPair(key, value)
+                    else:
+                        curr_pair = curr_pair.next
+        else:
             # Give that inex in storage a value
-            self.storage[idx] = pair
+            self.storage[idx] = LinkedPair(key, value)
 
     def remove(self, key):
         """
@@ -74,7 +90,7 @@ class HashTable:
         # Hash the key
         idx = self._hash_mod(key)
 
-        if self.storage[idx] != None and self.storage[idx].key == key:
+        if self.storage[idx] is not None and self.storage[idx].key is key:
             # Remove the value stored at that index
             removed_item = self.storage[idx]
             self.storage[idx] = None
@@ -92,12 +108,22 @@ class HashTable:
         """
 
         idx = self._hash_mod(key)
+        curr_pair = self.storage[idx]
 
         # Check if value is stored at given key
-        if self.storage[idx] != None and self.storage[idx].key == key:
+        if curr_pair is not None and curr_pair.key is key:
             # Retrieve value and return it
-            pair = self.storage[idx]
-            return pair.value
+            found = curr_pair
+            return found.value
+
+        elif curr_pair is not None:
+            # Loop thru linked list for key to retrieve
+            while curr_pair is not None:
+                if curr_pair.key == key:
+                    found = curr_pair
+                    return found.value
+                else:
+                    curr_pair = curr_pair.next
         else:
             return None
 
@@ -107,6 +133,7 @@ class HashTable:
         rehash all key/value pairs.
         Fill this in.
         """
+
         # Double capacity
         self.capacity *= 2
         new_storage = [None] * self.capacity
@@ -123,12 +150,13 @@ class HashTable:
 if __name__ == "__main__":
     ht = HashTable(2)
 
+    print(ht.storage)
     ht.insert("line_1", "Tiny hash table")
     ht.insert("line_2", "Filled beyond capacity")
     ht.insert("line_3", "Linked list saves the day!")
-
+    ht.insert("line_3", "It's working")
+    print(ht.storage)
     print("")
-
     # Test storing beyond capacity
     print(ht.retrieve("line_1"))
     print(ht.retrieve("line_2"))
