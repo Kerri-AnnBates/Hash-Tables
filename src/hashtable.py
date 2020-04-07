@@ -150,26 +150,32 @@ class HashTable:
 
         # Double capacity
         self.capacity *= 2
-        new_storage = [None] * self.capacity
+        new_storage = HashTable(self.capacity)
 
-        # # Rehash all key/value pairs
+        # Rehash all key/value pairs
+        # Traverse thru self.storage
         for pair in self.storage:
-            if pair != None:
-                idx = self._hash_mod(pair.key)
-                new_storage[idx] = pair
+            if pair is not None:
+                # And insert each pair into new storage
+                new_storage.insert(pair.key, pair.value)
 
-        self.storage = new_storage
+            if pair is not None and pair.next is not None:
+                curr = pair.next
+                while curr is not None:
+                    new_storage.insert(curr.key, curr.value)
+                    curr = curr.next
+
+        self.storage = new_storage.storage
 
 
 if __name__ == "__main__":
     ht = HashTable(2)
 
-    print(ht.storage)
     ht.insert("line_1", "Tiny hash table")
     ht.insert("line_2", "Filled beyond capacity")
     ht.insert("line_3", "Linked list saves the day!")
     ht.insert("line_3", "It's working")
-    print(ht.storage)
+
     print("")
     # Test storing beyond capacity
     print(ht.retrieve("line_1"))
