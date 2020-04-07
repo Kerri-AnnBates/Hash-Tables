@@ -60,8 +60,6 @@ class HashTable:
 
         # Check if there is already a value at that index
         if curr_pair is not None:
-            # print(f"Error: There is a collision at index: {idx}")
-
             # Overwrite value if key matches
             if curr_pair.key == key:
                 curr_pair.value = value
@@ -89,7 +87,6 @@ class HashTable:
 
         # Hash the key
         idx = self._hash_mod(key)
-
         curr_pair = self.storage[idx]
 
         # Check if value is stored at given key
