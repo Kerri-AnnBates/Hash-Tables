@@ -1,6 +1,8 @@
 # '''
 # Linked List hash table key/value pair
 # '''
+
+
 class LinkedPair:
     def __init__(self, key, value):
         self.key = key
@@ -10,9 +12,9 @@ class LinkedPair:
 
 class HashTable:
     """
-	A hash table that with `capacity` buckets
-	that accepts string keys
-	"""
+    A hash table that with `capacity` buckets
+    that accepts string keys
+    """
 
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
@@ -20,38 +22,34 @@ class HashTable:
 
     def _hash(self, key):
         """
-		Hash an arbitrary key and return an integer.
-
-		You may replace the Python hash with DJB2 as a stretch goal.
-		"""
+        Hash an arbitrary key and return an integer.
+        You may replace the Python hash with DJB2 as a stretch goal.
+        """
         return hash(key)
 
     def _hash_djb2(self, key):
         """
-		Hash an arbitrary key using DJB2 hash
-
-		OPTIONAL STRETCH: Research and implement DJB2
-		"""
+        Hash an arbitrary key using DJB2 hash
+        OPTIONAL STRETCH: Research and implement DJB2
+        """
         pass
 
     def _hash_mod(self, key):
         """
-		Take an arbitrary key and return a valid integer index
-		within the storage capacity of the hash table.
-		"""
+        Take an arbitrary key and return a valid integer index
+        within the storage capacity of the hash table.
+        """
+
         return self._hash(key) % self.capacity
 
     def insert(self, key, value):
         """
-		Store the value with the given key.
-
-		# Part 1: Hash collisions should be handled with an error warning. (Think about and
-		# investigate the impact this will have on the tests)
-
-		# Part 2: Change this so that hash collisions are handled with Linked List Chaining.
-
-		Fill this in.
-		"""
+        Store the value with the given key.
+        # Part 1: Hash collisions should be handled with an error warning. (Think about and
+        # investigate the impact this will have on the tests)
+        # Part 2: Change this so that hash collisions are handled with Linked List Chaining.
+        Fill this in.
+        """
 
         # Hash the key and set it to index
         idx = self._hash_mod(key)
@@ -61,66 +59,63 @@ class HashTable:
             print("Error: There is a collision")  # Print warning if there is
             # Start a linked list
         else:
-            node = LinkedPair(key, value)
+            pair = LinkedPair(key, value)
 
             # Give that inex in storage a value
-            self.storage[idx] = node
+            self.storage[idx] = pair
 
     def remove(self, key):
         """
-		Remove the value stored with the given key.
-
-		Print a warning if the key is not found.
-
-		Fill this in.
-		"""
+        Remove the value stored with the given key.
+        Print a warning if the key is not found.
+        Fill this in.
+        """
 
         # Hash the key
         idx = self._hash_mod(key)
 
-        # If key is not found, print a warning
-        if self.storage[idx] == None:
+        if self.storage[idx] != None and self.storage[idx].key == key:
+            # Remove the value stored at that index
+            removed_item = self.storage[idx]
+            self.storage[idx] = None
+            return removed_item.value
+        else:
+            # If key is not found, print a warning
             print("Key not found")
             return
 
-        # Remove the value stored at that index
-        self.storage[idx] = None
-        return self.storage[idx]
-
     def retrieve(self, key):
         """
-		Retrieve the value stored with the given key.
-
-		Returns None if the key is not found.
-
-		Fill this in.
-		"""
+        Retrieve the value stored with the given key.
+        Returns None if the key is not found.
+        Fill this in.
+        """
 
         idx = self._hash_mod(key)
 
         # Check if value is stored at given key
-        if self.storage[idx] == None:
-            return None
-        else:
+        if self.storage[idx] != None and self.storage[idx].key == key:
             # Retrieve value and return it
-            node = self.storage[idx]
-            return node.value
+            pair = self.storage[idx]
+            return pair.value
+        else:
+            return None
 
     def resize(self):
         """
-		Doubles the capacity of the hash table and
-		rehash all key/value pairs.
-
-		Fill this in.
-		"""
+        Doubles the capacity of the hash table and
+        rehash all key/value pairs.
+        Fill this in.
+        """
         # Double capacity
         self.capacity *= 2
         new_storage = [None] * self.capacity
 
         # # Rehash all key/value pairs
-        for item in self.storage:
-            idx = self._hash_mod(item.key)
-            new_storage[idx] = item
+        for pair in self.storage:
+            if pair != None:
+                idx = self._hash_mod(pair.key)
+                new_storage[idx] = pair
 
         self.storage = new_storage
 
