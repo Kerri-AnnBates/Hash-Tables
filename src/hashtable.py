@@ -59,9 +59,12 @@ class HashTable:
         # Check if there is already a value at that index
         if self.storage[idx]:
             print("Error: There is a collision")  # Print warning if there is
+            # Start a linked list
         else:
+            node = LinkedPair(key, value)
+
             # Give that inex in storage a value
-            self.storage[idx] = value
+            self.storage[idx] = node
 
     def remove(self, key):
         """
@@ -78,10 +81,11 @@ class HashTable:
         # If key is not found, print a warning
         if self.storage[idx] == None:
             print("Key not found")
-        else:
-            # Remove the value stored at that index
-            self.storage[idx] = None
-            return self.storage[idx]
+            return
+
+        # Remove the value stored at that index
+        self.storage[idx] = None
+        return self.storage[idx]
 
     def retrieve(self, key):
         """
@@ -95,11 +99,12 @@ class HashTable:
         idx = self._hash_mod(key)
 
         # Check if value is stored at given key
-        if self.storage[idx] == None or idx >= self.capacity:
+        if self.storage[idx] == None:
             return None
         else:
             # Retrieve value and return it
-            return self.storage[idx]
+            node = self.storage[idx]
+            return node.value
 
     def resize(self):
         """
@@ -112,7 +117,10 @@ class HashTable:
         self.capacity *= 2
         new_storage = [None] * self.capacity
 
-        # Rehash all key/value pairs
+        # # Rehash all key/value pairs
+        for item in self.storage:
+            idx = self._hash_mod(item.key)
+            new_storage[idx] = item
 
         self.storage = new_storage
 
