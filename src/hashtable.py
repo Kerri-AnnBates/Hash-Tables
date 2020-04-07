@@ -90,15 +90,29 @@ class HashTable:
         # Hash the key
         idx = self._hash_mod(key)
 
-        if self.storage[idx] is not None and self.storage[idx].key is key:
-            # Remove the value stored at that index
-            removed_item = self.storage[idx]
+        curr_pair = self.storage[idx]
+
+        # Check if value is stored at given key
+        if curr_pair is not None and curr_pair.key is key:
+
+            # If found, remove it
+            removed_pair = curr_pair
             self.storage[idx] = None
-            return removed_item.value
+
+            return removed_pair.value
+
+        elif curr_pair is not None and curr_pair.next is not None:
+            # Loop thru linked list for key to retrieve pair to remove
+            while curr_pair is not None:
+                if curr_pair.key == key:
+                    removed_pair = curr_pair
+                    self.storage[idx] = None
+
+                    return removed_pair.value
+                else:
+                    curr_pair = curr_pair.next
         else:
-            # If key is not found, print a warning
-            print("Key not found")
-            return
+            return None
 
     def retrieve(self, key):
         """
