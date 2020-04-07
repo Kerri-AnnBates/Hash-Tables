@@ -98,7 +98,7 @@ class HashTable:
 
             return removed_pair.value
 
-        elif curr_pair is not None and curr_pair.next is not None:
+        if curr_pair is not None and curr_pair.next is not None:
             # Loop thru linked list for key to retrieve pair to remove
             while curr_pair is not None:
                 if curr_pair.key == key:
